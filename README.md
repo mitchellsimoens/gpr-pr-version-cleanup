@@ -22,7 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: Delete Releases
-        uses: mitchellsimoens/gpr-pr-version-cleanup
+        uses: mitchellsimoens/gpr-pr-version-cleanup@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
@@ -43,7 +43,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: Delete Releases
-        uses: mitchellsimoens/gpr-pr-version-cleanup
+        uses: mitchellsimoens/gpr-pr-version-cleanup@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
