@@ -1,0 +1,13 @@
+name: Pull Request Node Version Cleanup
+author: Mitchell Simoens
+description: Cleans up alpha versions that were created from pull request.
+branding:
+  color: red
+  icon: activity
+inputs:
+  keep_git_tags:
+    description: Set to keep the git tags but still delete the release.
+    required: false
+runs:
+  using: docker
+  image: Dockerfile
