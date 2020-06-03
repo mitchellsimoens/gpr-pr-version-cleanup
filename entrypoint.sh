@@ -14,6 +14,12 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 PR_NUMBER=$(cat "$GITHUB_EVENT_PATH" | jq '.number')
 
+function yesOrNo() {
+  local input=${1:-}
+
+  [ -z "$input" ] && echo "Yes" || echo "No"
+}
+
 if [[ -z "$PR_NUMBER" ]]
 then
   echo "cannot get PR number from $GITHUB_EVENT_PATH"
@@ -21,18 +27,27 @@ then
   exit 1
 else
   KEEP_GIT_TAGS=${INPUT_KEEP_GIT_TAGS:-}
+  SKIP_NPM_UNPUBLISH=${INPUT_SKIP_NPM_UNPUBLISH:-}
   MATCHES=$(node "$DIR"/index.js)
 
-  if [[ -z "$KEEP_GIT_TAGS" ]]
-  then
-    echo "Deleting git tags..."
+  echo "Delete git tags: $(yesOrNo "$KEEP_GIT_TAGS")"
+  echo "Will npm unpublish: $(yesOrNo "$SKIP_NPM_UNPUBLISH")"
 
-    for TAG_NAME in $(echo "${MATCHES}" | jq -r '.[]'); do
+  echo
+
+  for TAG_NAME in $(echo "${MATCHES}" | jq -r '.[]'); do
+    if [[ -z "$KEEP_GIT_TAGS" ]]
+    then
       echo "DELETING GIT TAG: $TAG_NAME"
 
       git push origin ":$TAG_NAME"
-    done
-  else
-    echo "Keeping git tags"
-  fi
+    fi
+
+    if [[ -z "$SKIP_NPM_UNPUBLISH" ]]
+    then
+      echo "UNPUBLISHING NPM VERSION: $TAG_NAME"
+
+      npm unpublish "$TAG_NAME"
+    fi
+  done
 fi

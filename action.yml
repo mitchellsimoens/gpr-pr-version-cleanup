@@ -3,10 +3,13 @@ author: Mitchell Simoens
 description: Cleans up alpha versions that were created from pull request.
 branding:
   color: red
-  icon: activity
+  icon: git-pull-request
 inputs:
   keep_git_tags:
     description: Set to keep the git tags but still delete the release.
+    required: false
+  skip_npm_unpublish:
+    description: Set to skip running the npm unpublish command.
     required: false
 runs:
   using: docker
