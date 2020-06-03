@@ -11,6 +11,9 @@ inputs:
   skip_npm_unpublish:
     description: Set to skip running the npm unpublish command.
     required: false
+  skip_release_remove:
+    description: Set to skip removing the GitHub repository release.
+    required: false
 runs:
   using: docker
   image: Dockerfile

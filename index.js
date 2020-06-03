@@ -3,10 +3,14 @@ const octokit = new Octokit({
   auth: process.env.GITHUB_TOKEN,
 });
 const [ owner, repo ] = process.env.GITHUB_REPOSITORY.split('/');
+const [ , , pr ] = process.argv;
 
 const matched_releases = [];
 const matched_tags = [];
-const VERSION_RE = /^.+\.(\d+)-.+$/;
+const VERSION_RE = new RegExp(`^.+\.${pr}-.+$`);
+const TRUE_RE = /^\s*true\s*$/i;
+
+const removeReleases = TRUE_RE.test(process.env.INPUT_SKIP_RELEASE_REMOVE);
 
 Promise
   .all([
@@ -30,6 +34,10 @@ Promise
         matched_tags.push(tag.name);
       }
     });
+
+    if (!removeReleases) {
+      return matched_tags;
+    }
 
     return Promise
       .all(

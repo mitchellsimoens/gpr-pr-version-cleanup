@@ -28,10 +28,13 @@ then
 else
   KEEP_GIT_TAGS=${INPUT_KEEP_GIT_TAGS:-}
   SKIP_NPM_UNPUBLISH=${INPUT_SKIP_NPM_UNPUBLISH:-}
-  MATCHES=$(node "$DIR"/index.js)
+  SKIP_RELEASE_REMOVE=${INPUT_SKIP_RELEASE_REMOVE:-}
 
   echo "Delete git tags: $(yesOrNo "$KEEP_GIT_TAGS")"
   echo "Will npm unpublish: $(yesOrNo "$SKIP_NPM_UNPUBLISH")"
+  echo "Will remove release: $(yesOrNo "$SKIP_RELEASE_REMOVE")"
+
+  MATCHES=$(node "$DIR"/index.js "$PR_NUMBER")
 
   echo
 

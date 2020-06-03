@@ -31,10 +31,11 @@ jobs:
 
 The follow are the inputs this action accepts:
 
-| Name               | Required | Description                     |
-|--------------------|----------|---------------------------------|
-| keep_git_tags      | No       | Set to skip deleting git tags   |
-| skip_npm_unpublish | No       | Set to skip running npm publish |
+| Name                | Required | Description                          |
+|---------------------|----------|--------------------------------------|
+| keep_git_tags       | No       | Set to skip deleting git tags        |
+| skip_npm_unpublish  | No       | Set to skip running npm publish      |
+| skip_release_remove | No       | Set to skip removing GitHub releases |
 
 ### `keep_git_tags`
 
@@ -94,3 +95,28 @@ There are limitations to when you can run the `npm unpublish`.
 - For the npmjs.com registry, `npm unpublish` can only be run within 72 hours of when the version was published.
 - For GitHub Package Registry, `npm unpublish` cannot be run for public repositories; only private repositories can
 unpublish. This is a GitHub imposed "limitation".
+
+### `skip_release_remove`
+
+If you wish to keep the GitHub releases, set this to `true`:
+
+```yaml
+name: PR Version Cleanup
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  test:
+    name: Cleanup PR Versions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Delete Releases
+        uses: mitchellsimoens/gpr-pr-version-cleanup@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          skip_release_remove: true
+```
